@@ -39,17 +39,17 @@ public class ClaimsTest
     public void claimsShouldSerialize() throws JsonSerializationException
     {
         final Claims claims = new Claims.Builder()
-            .addVoluntary("test")
-            .addEssential("test2")
-            .add("test3", false, "1634")
-            .add("test4", false, new Object[] {"123", "456"})
-            .build();
+                .addVoluntary("test")
+                .addEssential("test2")
+                .add("test3", false, "1634")
+                .add("test4", false, new Object[] {"123", "456"})
+                .build();
 
         final String expected =
-            "{\"test\":null,\"test2\":{\"essential\":true},\"test3\":{\"value\":\"1634\"},\"test4\":{\"values\":[\"123\",\"456\"]}}";
+                "{\"test\":null,\"test2\":{\"essential\":true},\"test3\":{\"value\":\"1634\"},\"test4\":{\"values\":[\"123\",\"456\"]}}";
 
         final String actual = this.jsonService.serialize(claims);
-
+        assertTrue(claims.isVoluntary("test"));
         assertEqualsNoOrder(TestUtils.splitArray(actual), TestUtils.splitArray(expected));
     }
 
@@ -58,7 +58,7 @@ public class ClaimsTest
     public void claimsShouldDeserialize() throws JsonDeserializationException
     {
         final String expected =
-            "{\"nonce\":\"1234567890\",\"aud\":\"x-clientid-x\",\"azp\":\"x-clientid-x\",\"iss\":\"http://mobileconnect.io\",\"exp\":2147483647,\"auth_time\":2147483647,\"iat\":1471007327}";
+                "{\"nonce\":\"1234567890\",\"aud\":\"x-clientid-x\",\"azp\":\"x-clientid-x\",\"iss\":\"http://mobileconnect.io\",\"exp\":2147483647,\"auth_time\":2147483647,\"iat\":1471007327}";
 
         final Claims claims = this.jsonService.deserialize(expected, Claims.class);
 

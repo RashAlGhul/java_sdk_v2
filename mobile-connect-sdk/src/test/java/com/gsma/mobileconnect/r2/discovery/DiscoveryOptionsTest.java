@@ -18,25 +18,27 @@ public class DiscoveryOptionsTest
     {
         uri = new URI("http://redirect");
         discoveryOptions = new DiscoveryOptions.Builder(null)
-            .withIdentifiedMnc("iMnc")
-            .withSelectedMcc("sMcc")
-            .withSelectedMnc("sMnc")
-            .withClientIp("clientIp")
-            .withIdentifiedMcc("iMcc")
-            .withLocalClientIp("localClientIp")
-            .withManuallySelect(true)
-            .withMsisdn("msisdn")
-            .withRedirectUrl(uri)
-            .withUsingMobileData(false)
-            .build();
+                .withIdentifiedMnc("iMnc")
+                .withSelectedMcc("sMcc")
+                .withSelectedMnc("sMnc")
+                .withClientIp("clientIp")
+                .withIdentifiedMcc("iMcc")
+                .withLocalClientIp("localClientIp")
+                .withManuallySelect(true)
+                .withMsisdn("msisdn")
+                .withRedirectUrl(uri)
+                .withUsingMobileData(false)
+                .withXRedirect("XRedirect")
+                .withUsingCorrelationId(true)
+                .build();
     }
-
-    @AfterMethod
     public void tearDown() throws Exception
     {
         uri = null;
         discoveryOptions = null;
     }
+
+    @AfterMethod
 
     @Test
     public void testGetMsisdn() throws Exception
@@ -98,4 +100,15 @@ public class DiscoveryOptionsTest
         assertEquals(discoveryOptions.getClientIp(), "clientIp");
     }
 
+    @Test
+    public void testGetXRedirect() throws Exception
+    {
+        assertEquals(discoveryOptions.getXRedirect(), "XRedirect");
+    }
+
+    @Test
+    public void testGetUsingCorrelationId() throws Exception
+    {
+        assertTrue(discoveryOptions.getUsingCorrelationId());
+    }
 }

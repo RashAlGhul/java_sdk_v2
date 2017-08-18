@@ -24,16 +24,6 @@ import java.util.List;
  */
 public class VersionUtils
 {
-
-    /**
-     * Default Constructor
-     */
-    private VersionUtils()
-    {
-        /*
-        Private Default Constructor
-         */
-    }
     /**
      * Compares two version numbers in format "n.m" (may be up to four degrees)
      * @param ver1 version 1

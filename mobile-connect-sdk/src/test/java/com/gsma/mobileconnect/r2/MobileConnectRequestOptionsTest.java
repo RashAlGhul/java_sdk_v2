@@ -34,6 +34,7 @@ public class MobileConnectRequestOptionsTest
                 .withAuthenticationOptions(authenticationOptions)
                 .withValidationOptions(validationOptions)
                 .witAutoRetrieveIdentitySet(true)
+                .withUsingCorrelationId(true)
                 .build();
     }
 
@@ -47,7 +48,7 @@ public class MobileConnectRequestOptionsTest
     public void testGetDiscoveryOptions() throws Exception
     {
         assertEquals(requestOptions.getDiscoveryOptions(), discoveryOptions,
-            "Check discovery options");
+                "Check discovery options");
     }
 
     @Test
@@ -67,14 +68,14 @@ public class MobileConnectRequestOptionsTest
     public void testGetAuthenticationOptions() throws Exception
     {
         assertEquals(requestOptions.getAuthenticationOptions(), authenticationOptions,
-            "Check authentication options");
+                "Check authentication options");
     }
 
     @Test
     public void testGetValidationOptions() throws Exception
     {
         assertEquals(requestOptions.getValidationOptions(), validationOptions,
-            "Check validation options");
+                "Check validation options");
     }
 
     @Test
@@ -99,5 +100,11 @@ public class MobileConnectRequestOptionsTest
     public void testGetValidationOptionsBuilder() throws Exception
     {
         assertTrue(requestOptions.getValidationOptionsBuilder() != null);
+    }
+
+    @Test
+    public void testIsCorrelationId() throws Exception
+    {
+        assertTrue(requestOptions.isCorrelationId());
     }
 }

@@ -19,6 +19,7 @@ public class RequestTokenResponseDataTest
     private Date timeReceived;
     private Date expiry;
     private Long expiresIn;
+    private String correlationId;
 
     @BeforeMethod
     public void setUp() throws Exception
@@ -29,14 +30,17 @@ public class RequestTokenResponseDataTest
 
         expiry = new Date(this.timeReceived.getTime() + TimeUnit.SECONDS.toMillis(expiresIn));
 
+        correlationId = "2134";
+
         requestTokenResponseData = new RequestTokenResponseData.Builder()
-            .withAccessToken("accessToken")
-            .withExpiresIn(expiresIn)
-            .withIdToken("idToken")
-            .withRefreshToken("refreshToken")
-            .withTokenType("tokenType")
-            .withTimeReceived(timeReceived)
-            .build();
+                .withAccessToken("accessToken")
+                .withExpiresIn(expiresIn)
+                .withIdToken("idToken")
+                .withRefreshToken("refreshToken")
+                .withTokenType("tokenType")
+                .withTimeReceived(timeReceived)
+                .withCorrelationId(correlationId)
+                .build();
     }
 
     @AfterMethod
@@ -85,6 +89,12 @@ public class RequestTokenResponseDataTest
     public void testGetExpiresIn() throws Exception
     {
         assertEquals(requestTokenResponseData.getExpiresIn(), expiresIn);
+    }
+
+    @Test
+    public void testGetCorrelationId() throws Exception
+    {
+        assertEquals(requestTokenResponseData.getCorrelationId(), correlationId);
     }
 
 }

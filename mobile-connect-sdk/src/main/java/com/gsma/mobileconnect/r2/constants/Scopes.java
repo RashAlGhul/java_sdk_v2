@@ -56,10 +56,6 @@ public final class Scopes
      */
     public static final String MOBILECONNECTIDENTITYNATIONALID = "openid mc_identity_nationalid";
 
-    private Scopes()
-    {
-    }
-
     /**
      * Returns a list of scope values that is ensured to contain defaultScope values without
      * duplications.  This can be used when multiple modifications of scope are required to be

@@ -50,13 +50,6 @@ public class LogUtils
         ASTERISK_MASK = sb.toString();
     }
 
-    private LogUtils()
-    {
-        /*
-        Private default constructor since all methods are static
-         */
-    }
-
     /**
      * Mask centre of a String with asterisks.  Will cap out at the length of ASTERISK_MASK for
      * number of asterisks included (i.e. a 300 character String).

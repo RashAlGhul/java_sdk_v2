@@ -52,11 +52,4 @@ public class ClaimsConstants
      * Key for issued at tme
      */
     public static final String ISSUED_AT_TIME = "iat";
-
-    private ClaimsConstants()
-    {
-        /*
-        Private default constructor
-         */
-    }
 }

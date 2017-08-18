@@ -38,11 +38,4 @@ public final class Cookies
      * Key for Enum-Nonce cookie
      */
     public static final String ENUM_NONCE = "Enum-Nonce";
-
-    private Cookies()
-    {
-        /*
-        Private default constructor
-         */
-    }
 }

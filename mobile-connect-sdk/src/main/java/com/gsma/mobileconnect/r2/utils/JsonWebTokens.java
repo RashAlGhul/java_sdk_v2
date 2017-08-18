@@ -29,10 +29,6 @@ public final class JsonWebTokens
 {
     private static final String FIELD_SEPARATOR_REGEX = "\\.";
 
-    private JsonWebTokens()
-    {
-    }
-
     /**
      * Check if the token is in the valid JWT format.
      *

@@ -31,10 +31,6 @@ public final class StringUtils
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(StringUtils.class);
 
-    private StringUtils()
-    {
-    }
-
     /**
      * Inspect a String for content.  Note that this method considers white space as content and
      * therefore a non-empty String.

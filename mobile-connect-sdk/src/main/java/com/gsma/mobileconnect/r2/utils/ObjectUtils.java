@@ -29,10 +29,6 @@ public final class ObjectUtils
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(ObjectUtils.class);
 
-    private ObjectUtils()
-    {
-    }
-
     /**
      * Checks that the specified object reference is not null. This method is designed primarily for
      * doing parameter validation in methods and constructors, as demonstrated below:

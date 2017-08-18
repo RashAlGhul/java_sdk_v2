@@ -25,9 +25,6 @@ import java.util.*;
  */
 public final class ListUtils
 {
-    private ListUtils()
-    {
-    }
 
     /**
      * Copies the provided list then wraps it as an unmodifiable list.  Note that contents could

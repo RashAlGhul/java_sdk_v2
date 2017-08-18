@@ -81,12 +81,4 @@ public final class Parameters
 
     public static final String ACCESS_TOKEN_HINT = "access_token";
     public static final String REFRESH_TOKEN_HINT = "refresh_token";
-
-
-    private Parameters()
-    {
-        /*
-        Private default constructor
-         */
-    }
 }

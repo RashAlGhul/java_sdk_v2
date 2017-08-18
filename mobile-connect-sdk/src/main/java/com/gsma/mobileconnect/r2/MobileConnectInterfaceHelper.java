@@ -59,10 +59,6 @@ class MobileConnectInterfaceHelper
     private static final Pattern NONCE_REGEX = Pattern.compile("\"?nonce\"?:\"(.*?)\"");
     private static final String DISCOVERY_RESPONSE = "discoveryResponse";
 
-    private MobileConnectInterfaceHelper()
-    {
-    }
-
     static MobileConnectStatus attemptDiscovery(final IDiscoveryService discoveryService,
         final String msisdn, final String mcc, final String mnc,
         final Iterable<KeyValuePair> cookies, final MobileConnectConfig config,

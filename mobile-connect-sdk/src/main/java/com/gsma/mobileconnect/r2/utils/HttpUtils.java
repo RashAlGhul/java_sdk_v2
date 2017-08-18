@@ -39,10 +39,6 @@ public final class HttpUtils
     private static final Pattern AUTH_ERROR_DESC_REGEX =
         Pattern.compile("error_description\\s?=\\s?\"(.*?)\"");
 
-    private HttpUtils()
-    {
-    }
-
     /**
      * Creates an {@link ErrorResponse} instance from the WWW-Authenticate header.
      *

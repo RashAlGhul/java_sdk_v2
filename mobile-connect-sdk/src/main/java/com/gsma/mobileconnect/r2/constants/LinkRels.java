@@ -76,11 +76,4 @@ public final class LinkRels
      * Key for scope
      */
     public static final String SCOPE = "scope";
-
-    private LinkRels()
-    {
-        /*
-        Private default constructor
-         */
-    }
 }

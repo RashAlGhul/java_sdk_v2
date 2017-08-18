@@ -42,11 +42,4 @@ public final class Headers
      * Key for cookie header.
      */
     public static final String COOKIE = "Cookie";
-
-    private Headers()
-    {
-        /*
-        Private default constructor
-         */
-    }
 }

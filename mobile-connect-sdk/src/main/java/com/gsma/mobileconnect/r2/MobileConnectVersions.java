@@ -55,10 +55,6 @@ public final class MobileConnectVersions
         DEFAULT_SUPPORTED_VERSIONS = Collections.unmodifiableMap(versions);
     }
 
-    private MobileConnectVersions()
-    {
-    }
-
     /**
      * Coerces a version to the valid default for that version if null or empty.
      *

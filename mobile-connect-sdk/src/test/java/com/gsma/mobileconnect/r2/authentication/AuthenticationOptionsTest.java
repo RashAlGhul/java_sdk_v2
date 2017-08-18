@@ -10,6 +10,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @since 2.0
@@ -27,33 +28,37 @@ public class AuthenticationOptionsTest
     private String claimsLocales = "claimsLocales";
     private String idTokenHint = "idTokenHint";
     private String loginHint = "loginHint";
+    private String loginHintToken = "a1e36771f301cfa9da35110a867de2561ed6b36685e60329f37008fd43619db7c7218e163f43c3b2a2a2c";
     private String dbts = "dbts";
     private String clientName = "clientName";
     private String context = "context";
     private String bindingMessage = "bindingMessage";
     private String claimsJson = "claimsJson";
+    private boolean isUsingCorrelationId = true;
     private ClaimsParameter claims = null;
 
     @BeforeMethod
     public void setUp() throws Exception
     {
         authenticationOptions = new AuthenticationOptions.Builder()
-            .withClientId(clientId)
-            .withClientName(clientName)
-            .withRedirectUrl(redirectUrl)
-            .withNonce(nonce)
-            .withState(state)
-            .withPrompt(prompt)
-            .withUiLocales(uiLocales)
-            .withClaimsLocales(claimsLocales)
-            .withIdTokenHint(idTokenHint)
-            .withLoginHint(loginHint)
-            .withDbts(dbts)
-            .withContext(context)
-            .withBindingMessage(bindingMessage)
-            .withClaimsJson(claimsJson)
-            .withClaims(claims)
-            .build();
+                .withClientId(clientId)
+                .withClientName(clientName)
+                .withRedirectUrl(redirectUrl)
+                .withNonce(nonce)
+                .withState(state)
+                .withPrompt(prompt)
+                .withUiLocales(uiLocales)
+                .withClaimsLocales(claimsLocales)
+                .withIdTokenHint(idTokenHint)
+                .withLoginHint(loginHint)
+                .withLoginHintToken(loginHintToken)
+                .withDbts(dbts)
+                .withContext(context)
+                .withBindingMessage(bindingMessage)
+                .withClaimsJson(claimsJson)
+                .withClaims(claims)
+                .withUsingCorrelationId(isUsingCorrelationId)
+                .build();
     }
 
     @AfterMethod
@@ -78,7 +83,7 @@ public class AuthenticationOptionsTest
     public void testGetAcrValues() throws Exception
     {
         assertEquals(authenticationOptions.getAcrValues(),
-            DefaultOptions.AUTHENTICATION_ACR_VALUES);
+                DefaultOptions.AUTHENTICATION_ACR_VALUES);
     }
 
     @Test
@@ -142,6 +147,12 @@ public class AuthenticationOptionsTest
     }
 
     @Test
+    public void testGetLoginHintToken() throws Exception
+    {
+        assertEquals(authenticationOptions.getLoginHintToken(), loginHintToken);
+    }
+
+    @Test
     public void testGetDbts() throws Exception
     {
         assertEquals(authenticationOptions.getDbts(), dbts);
@@ -178,6 +189,12 @@ public class AuthenticationOptionsTest
     }
 
     @Test
+    public void testGetUsingCorrelationId() throws Exception
+    {
+        assertTrue(authenticationOptions.getUsingCorrelationId());
+    }
+
+    @Test
     public void builderObjectShouldBuildAuthenticationOptions() throws URISyntaxException
     {
         final String acrValues = "2";
@@ -192,6 +209,7 @@ public class AuthenticationOptionsTest
         final String display = "display";
         final String idTokenHint = "idTokenHint";
         final String loginHint = "loginHint";
+        final String loginHintToken = "a1e36771f301cfa9da35110a867de2561ed6b36685e60329f37008fd43619db7c7218e163f43c3b2a2a2c";
         final int maxAge = 0;
         final String nonce = "nonce";
         final String prompt = "prompt";
@@ -199,28 +217,31 @@ public class AuthenticationOptionsTest
         final String scope = "scope";
         final String state = "state";
         final String uiLocales = "uiLocales";
+        final boolean isUsingCorrelationId = true;
 
         final AuthenticationOptions authenticationOptions = new AuthenticationOptions.Builder()
-            .withAcrValues(acrValues)
-            .withBindingMessage(bindingMessage)
-            .withClaims(claimsParameter)
-            .withClaimsJson(claimsJson)
-            .withClaimsLocales(claimsLocales)
-            .withClientId(clientId)
-            .withClientName(clientName)
-            .withContext(context)
-            .withDbts(dbts)
-            .withDisplay(display)
-            .withIdTokenHint(idTokenHint)
-            .withLoginHint(loginHint)
-            .withMaxAge(maxAge)
-            .withNonce(nonce)
-            .withPrompt(prompt)
-            .withRedirectUrl(redirectUrl)
-            .withScope(scope)
-            .withState(state)
-            .withUiLocales(uiLocales)
-            .build();
+                .withAcrValues(acrValues)
+                .withBindingMessage(bindingMessage)
+                .withClaims(claimsParameter)
+                .withClaimsJson(claimsJson)
+                .withClaimsLocales(claimsLocales)
+                .withClientId(clientId)
+                .withClientName(clientName)
+                .withContext(context)
+                .withDbts(dbts)
+                .withDisplay(display)
+                .withIdTokenHint(idTokenHint)
+                .withLoginHint(loginHint)
+                .withLoginHintToken(loginHintToken)
+                .withMaxAge(maxAge)
+                .withNonce(nonce)
+                .withPrompt(prompt)
+                .withRedirectUrl(redirectUrl)
+                .withScope(scope)
+                .withState(state)
+                .withUiLocales(uiLocales)
+                .withUsingCorrelationId(isUsingCorrelationId)
+                .build();
 
         assertEquals(authenticationOptions.getAcrValues(), acrValues);
         assertEquals(authenticationOptions.getBindingMessage(), bindingMessage);
@@ -240,5 +261,6 @@ public class AuthenticationOptionsTest
         assertEquals(authenticationOptions.getScope(), scope);
         assertEquals(authenticationOptions.getState(), state);
         assertEquals(authenticationOptions.getUiLocales(), uiLocales);
+        assertEquals(authenticationOptions.getUsingCorrelationId(), isUsingCorrelationId);
     }
 }

@@ -59,33 +59,33 @@ import static org.testng.Assert.*;
 public class MobileConnectWebInterfaceTest
 {
     private final MobileConnectConfig config = new MobileConnectConfig.Builder()
-        .withClientId("zxcvbnm")
-        .withClientSecret("asdfghjkl")
-        .withDiscoveryUrl(URI.create("http://discovery/test"))
-        .withRedirectUrl(URI.create("http://redirect/test"))
-        .build();
+            .withClientId("zxcvbnm")
+            .withClientSecret("asdfghjkl")
+            .withDiscoveryUrl(URI.create("http://discovery/test"))
+            .withRedirectUrl(URI.create("http://redirect/test"))
+            .build();
     private final MockRestClient restClient = new MockRestClient();
     private final MobileConnect mobileConnect = MobileConnect
-        .builder(this.config, new DefaultEncodeDecoder())
-        .withRestClient(this.restClient)
-        .build();
+            .builder(this.config, new DefaultEncodeDecoder())
+            .withRestClient(this.restClient)
+            .build();
 
     private final IJsonService jsonService = new JacksonJsonService();
     private final IDiscoveryService discoveryService = this.mobileConnect.getDiscoveryService();
     private final MobileConnectWebInterface mcWebInterface =
-        this.mobileConnect.getMobileConnectWebInterface();
+            this.mobileConnect.getMobileConnectWebInterface();
 
     private final HttpServletRequest request = mock(HttpServletRequest.class);
 
     private DiscoveryResponse completeDiscovery()
-        throws RequestFailedException, InvalidResponseException
+            throws RequestFailedException, InvalidResponseException
     {
         this.restClient
-            .addResponse(TestUtils.AUTHENTICATION_RESPONSE)
-            .addResponse(TestUtils.PROVIDER_METADATA_RESPONSE);
+                .addResponse(TestUtils.AUTHENTICATION_RESPONSE)
+                .addResponse(TestUtils.PROVIDER_METADATA_RESPONSE);
 
         return this.discoveryService.completeSelectedOperatorDiscovery(this.config,
-            this.config.getRedirectUrl(), "111", "11");
+                this.config.getRedirectUrl(), "111", "11");
     }
 
     @BeforeMethod
@@ -104,40 +104,40 @@ public class MobileConnectWebInterfaceTest
     public Object[][] startAuthnData()
     {
         return new Object[][] {
-            //
-            {null, new String[] {"openid"}, "mc_authz"},
-            //
-            {new AuthenticationOptions.Builder().withContext("context").build(),
-             new String[] {"mc_authz"}, "mc_authn"},
-            //
-            {new AuthenticationOptions.Builder()
-                 .withScope("mc_authz")
-                 .withContext("context")
-                 .withBindingMessage("message").build(), new String[] {"mc_authz"}, "mc_authn"},
-            //
-            {new AuthenticationOptions.Builder()
-                 .withScope("mc_identity_phone")
-                 .withContext("context")
-                 .withBindingMessage("message").build(),
-             new String[] {"mc_authz", "mc_identity_phone"}, "mc_authn"}};
+                //
+                {null, new String[] {"openid"}, "mc_authz"},
+                //
+                {new AuthenticationOptions.Builder().withContext("context").build(),
+                        new String[] {"mc_authz"}, "mc_authn"},
+                //
+                {new AuthenticationOptions.Builder()
+                        .withScope("mc_authz")
+                        .withContext("context")
+                        .withBindingMessage("message").build(), new String[] {"mc_authz"}, "mc_authn"},
+                //
+                {new AuthenticationOptions.Builder()
+                        .withScope("mc_identity_phone")
+                        .withContext("context")
+                        .withBindingMessage("message").build(),
+                        new String[] {"mc_authz", "mc_identity_phone"}, "mc_authn"}};
     }
 
     @Test(dataProvider = "startAuthnData")
     public void startAuthenticationScopes(final AuthenticationOptions authnOptions,
-        final String[] includes, final String exclude)
-        throws RequestFailedException, InvalidResponseException
+                                          final String[] includes, final String exclude)
+            throws RequestFailedException, InvalidResponseException
     {
         final DiscoveryResponse discoveryResponse = this.completeDiscovery();
 
         final MobileConnectRequestOptions options = authnOptions == null
-                                                    ? null
-                                                    : new MobileConnectRequestOptions.Builder()
-                                                        .withAuthenticationOptions(authnOptions)
-                                                        .build();
+                ? null
+                : new MobileConnectRequestOptions.Builder()
+                .withAuthenticationOptions(authnOptions)
+                .build();
 
         final MobileConnectStatus status =
-            this.mcWebInterface.startAuthentication(this.request, discoveryResponse,
-                "1111222233334444", "state", "nonce", options);
+                this.mcWebInterface.startAuthentication(this.request, discoveryResponse,
+                        "1111222233334444", "state", "nonce", options);
 
         assertNotNull(status);
         assertEquals(status.getResponseType(), MobileConnectStatus.ResponseType.AUTHENTICATION);
@@ -154,24 +154,24 @@ public class MobileConnectWebInterfaceTest
 
     @Test
     public void startAuthenticationShouldSetClientNameWhenAuthz()
-        throws RequestFailedException, InvalidResponseException
+            throws RequestFailedException, InvalidResponseException
     {
         final DiscoveryResponse discoveryResponse = this.completeDiscovery();
 
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder()
-            .withAuthenticationOptions(new AuthenticationOptions.Builder()
-                .withScope("mc_identity_phone")
-                .withContext("context")
-                .withBindingMessage("message")
-                .build())
-            .build();
+                .withAuthenticationOptions(new AuthenticationOptions.Builder()
+                        .withScope("mc_identity_phone")
+                        .withContext("context")
+                        .withBindingMessage("message")
+                        .build())
+                .build();
 
         final MobileConnectStatus status =
-            this.mcWebInterface.startAuthentication(this.request, discoveryResponse,
-                "1111222233334444", "state", "nonce", options);
+                this.mcWebInterface.startAuthentication(this.request, discoveryResponse,
+                        "1111222233334444", "state", "nonce", options);
 
         final String clientName =
-            HttpUtils.extractQueryValue(URI.create(status.getUrl()), "client_name");
+                HttpUtils.extractQueryValue(URI.create(status.getUrl()), "client_name");
 
         assertEquals(clientName, "test1"); // set in the response under TestUtils
     }
@@ -181,11 +181,11 @@ public class MobileConnectWebInterfaceTest
     {
         this.restClient.addResponse(TestUtils.USERINFO_RESPONSE);
         final DiscoveryResponse discoveryResponse =
-            DiscoveryResponse.fromRestResponse(TestUtils.AUTHENTICATION_RESPONSE, this.jsonService);
+                DiscoveryResponse.fromRestResponse(TestUtils.AUTHENTICATION_RESPONSE, this.jsonService);
 
         final MobileConnectStatus status =
-            this.mcWebInterface.requestUserInfo(this.request, discoveryResponse,
-                "zaqwsxcderfvbgtyhnmjukilop");
+                this.mcWebInterface.requestUserInfo(this.request, discoveryResponse,
+                        "zaqwsxcderfvbgtyhnmjukilop");
 
         assertEquals(status.getResponseType(), MobileConnectStatus.ResponseType.USER_INFO);
         assertNotNull(status.getIdentityResponse());
@@ -195,12 +195,12 @@ public class MobileConnectWebInterfaceTest
     public void requestUserInfoReturnsErrorWhenNoUserInfoUrl() throws JsonDeserializationException
     {
         final DiscoveryResponse discoveryResponse =
-            DiscoveryResponse.fromRestResponse(TestUtils.AUTHENTICATION_NO_URI_RESPONSE,
-                this.jsonService);
+                DiscoveryResponse.fromRestResponse(TestUtils.AUTHENTICATION_NO_URI_RESPONSE,
+                        this.jsonService);
 
         final MobileConnectStatus status =
-            this.mcWebInterface.requestUserInfo(this.request, discoveryResponse,
-                "zaqwsxcderfvbgtyhnmjukilop");
+                this.mcWebInterface.requestUserInfo(this.request, discoveryResponse,
+                        "zaqwsxcderfvbgtyhnmjukilop");
 
         assertEquals(status.getResponseType(), MobileConnectStatus.ResponseType.ERROR);
         assertNull(status.getIdentityResponse());
@@ -210,17 +210,17 @@ public class MobileConnectWebInterfaceTest
 
     @Test
     public void requestUserInfoShouldUseSdkSessionCache()
-        throws JsonDeserializationException, CacheAccessException
+            throws JsonDeserializationException, CacheAccessException
     {
         this.restClient.addResponse(TestUtils.USERINFO_RESPONSE);
 
         final DiscoveryResponse discoveryResponse =
-            DiscoveryResponse.fromRestResponse(TestUtils.AUTHENTICATION_RESPONSE, this.jsonService);
+                DiscoveryResponse.fromRestResponse(TestUtils.AUTHENTICATION_RESPONSE, this.jsonService);
         this.discoveryService.getCache().add("sessionid", discoveryResponse);
 
         final MobileConnectStatus status =
-            this.mcWebInterface.requestUserInfo(this.request, "sessionid",
-                "zaqwsxcderfvbgtyhnmjukilop");
+                this.mcWebInterface.requestUserInfo(this.request, "sessionid",
+                        "zaqwsxcderfvbgtyhnmjukilop");
 
         assertEquals(status.getResponseType(), MobileConnectStatus.ResponseType.USER_INFO);
         assertNotNull(status.getIdentityResponse());
@@ -230,8 +230,8 @@ public class MobileConnectWebInterfaceTest
     public void requestTokenShouldReturnErrorForInvalidSession()
     {
         final MobileConnectStatus status =
-            this.mcWebInterface.requestToken(this.request, "invalidid", URI.create("http://test"),
-                "state", "nonce", null);
+                this.mcWebInterface.requestToken(this.request, "invalidid", URI.create("http://test"),
+                        "state", "nonce", null);
 
         assertEquals(status.getResponseType(), MobileConnectStatus.ResponseType.ERROR);
         assertEquals(status.getErrorCode(), "sdksession_not_found");
@@ -241,19 +241,19 @@ public class MobileConnectWebInterfaceTest
     public void requestTokenShouldReturnErrorForCacheDisabled()
     {
         final MobileConnectConfig config = new MobileConnectConfig.Builder()
-            .withCacheResponsesWithSessionId(false)
-            .withClientId("id")
-            .withClientSecret("secret")
-            .withDiscoveryUrl(URI.create("http://discovery"))
-            .withRedirectUrl(URI.create("http://redirect"))
-            .build();
+                .withCacheResponsesWithSessionId(false)
+                .withClientId("id")
+                .withClientSecret("secret")
+                .withDiscoveryUrl(URI.create("http://discovery"))
+                .withRedirectUrl(URI.create("http://redirect"))
+                .build();
 
         final MobileConnectWebInterface mcWebInterface =
-            MobileConnect.buildWebInterface(config, new DefaultEncodeDecoder());
+                MobileConnect.buildWebInterface(config, new DefaultEncodeDecoder());
 
         final MobileConnectStatus status =
-            mcWebInterface.requestToken(this.request, "invalidid", URI.create("http://test"),
-                "state", "nonce", null);
+                mcWebInterface.requestToken(this.request, "invalidid", URI.create("http://test"),
+                        "state", "nonce", null);
 
         assertEquals(status.getResponseType(), MobileConnectStatus.ResponseType.ERROR);
         assertEquals(status.getErrorCode(), "cache_disabled");
@@ -261,22 +261,22 @@ public class MobileConnectWebInterfaceTest
 
     @Test(dataProvider = "startAuthnData")
     public void testHeadlessAuthenticationGetTokenButValidationFails(final AuthenticationOptions authnOptions,
-        final String[] includes, final String exclude)
-        throws RequestFailedException, InvalidResponseException, URISyntaxException
+                                                                     final String[] includes, final String exclude)
+            throws RequestFailedException, InvalidResponseException, URISyntaxException
     {
-         final DiscoveryResponse discoveryResponse = this.completeDiscovery();
-         this.restClient.addResponse(TestUtils.VALIDATED_TOKEN_RESPONSE);
-         this.restClient.addResponse(TestUtils.JWKS_RESPONSE);
+        final DiscoveryResponse discoveryResponse = this.completeDiscovery();
+        this.restClient.addResponse(TestUtils.VALIDATED_TOKEN_RESPONSE);
+        this.restClient.addResponse(TestUtils.JWKS_RESPONSE);
 
-         final MobileConnectRequestOptions options = authnOptions == null
-         ? null
-         : new MobileConnectRequestOptions.Builder()
-         .withAuthenticationOptions(authnOptions)
-         .build();
+        final MobileConnectRequestOptions options = authnOptions == null
+                ? null
+                : new MobileConnectRequestOptions.Builder()
+                .withAuthenticationOptions(authnOptions)
+                .build();
 
-         final MobileConnectStatus status =
-         this.mcWebInterface.requestHeadlessAuthentication(this.request, discoveryResponse,
-         "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a6", options);
+        final MobileConnectStatus status =
+                this.mcWebInterface.requestHeadlessAuthentication(this.request, discoveryResponse,
+                        "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a6", options);
 
         assertNotNull(status);
 
@@ -289,32 +289,32 @@ public class MobileConnectWebInterfaceTest
         assertEquals(status.getRequestTokenResponse().getResponseCode(), 202);
 
         assertEquals(status.getRequestTokenResponse().getResponseData().getAccessToken(),
-            "966ad150-16c5-11e6-944f-43079d13e2f3");
+                "966ad150-16c5-11e6-944f-43079d13e2f3");
         assertEquals(status.getRequestTokenResponse().getResponseData().getIdToken(),
-            "eyJhbGciOiJSUzI1NiIsImtpZCI6IlBIUE9QLTAwIn0.eyJpc3MiOiJodHRwczpcL1wvcmVmZXJlbmNlLm1vYmlsZWNvbm5lY3QuaW9cL21vYmlsZWNvbm5lY3QiLCJzdWIiOiI0MTE0MjFCMC0zOEQ2LTY1NjgtQTUzQS1ERjk5NjkxQjdFQjYiLCJhdWQiOlsieC1aV1JoTmpVM09XSTNNR0l3WVRSaCJdLCJleHAiOjE0NzQ2MjYzMzAsImlhdCI6MTQ3NDYyNjAzMCwibm9uY2UiOiI4MTk5MTQ5Ni00OGJiLTRkMTMtYmQwYy0xMTdkOTk0NDExYTYiLCJhdF9oYXNoIjoiNTZGMXo3RjZ3eWhUYUhVY1ZGY0xJQSIsImF1dGhfdGltZSI6MTQ3NDYyNjAyMCwiYWNyIjoiMiIsImFtciI6WyJTSU1fUElOIl0sImF6cCI6IngtWldSaE5qVTNPV0kzTUdJd1lUUmgifQ.TYcvfIHeKigkvjYta6fy90EffiA6u6NFCSIPlPM2WxEUi8Kxc5JIrjXnM8l0rFJOLmgNFUBpSqIRhuxwZkUV52KWf8jzswi3jTI8wEjonbjgviz7c6WzlZdb0Pw5kUEWy2xMam7VprESphPaIkHCDor2yR2g6Uq3Wtqyg7MCqek");
+                "eyJhbGciOiJSUzI1NiIsImtpZCI6IlBIUE9QLTAwIn0.eyJpc3MiOiJodHRwczpcL1wvcmVmZXJlbmNlLm1vYmlsZWNvbm5lY3QuaW9cL21vYmlsZWNvbm5lY3QiLCJzdWIiOiI0MTE0MjFCMC0zOEQ2LTY1NjgtQTUzQS1ERjk5NjkxQjdFQjYiLCJhdWQiOlsieC1aV1JoTmpVM09XSTNNR0l3WVRSaCJdLCJleHAiOjE0NzQ2MjYzMzAsImlhdCI6MTQ3NDYyNjAzMCwibm9uY2UiOiI4MTk5MTQ5Ni00OGJiLTRkMTMtYmQwYy0xMTdkOTk0NDExYTYiLCJhdF9oYXNoIjoiNTZGMXo3RjZ3eWhUYUhVY1ZGY0xJQSIsImF1dGhfdGltZSI6MTQ3NDYyNjAyMCwiYWNyIjoiMiIsImFtciI6WyJTSU1fUElOIl0sImF6cCI6IngtWldSaE5qVTNPV0kzTUdJd1lUUmgifQ.TYcvfIHeKigkvjYta6fy90EffiA6u6NFCSIPlPM2WxEUi8Kxc5JIrjXnM8l0rFJOLmgNFUBpSqIRhuxwZkUV52KWf8jzswi3jTI8wEjonbjgviz7c6WzlZdb0Pw5kUEWy2xMam7VprESphPaIkHCDor2yR2g6Uq3Wtqyg7MCqek");
 
         assertEquals(status.getRequestTokenResponse().getDecodedIdTokenPayload(),
-            "{\"iss\":\"https:\\/\\/reference.mobileconnect.io\\/mobileconnect\",\"sub\":\"411421B0-38D6-6568-A53A-DF99691B7EB6\",\"aud\":[\"x-ZWRhNjU3OWI3MGIwYTRh\"],\"exp\":1474626330,\"iat\":1474626030,\"nonce\":\"81991496-48bb-4d13-bd0c-117d994411a6\",\"at_hash\":\"56F1z7F6wyhTaHUcVFcLIA\",\"auth_time\":1474626020,\"acr\":\"2\",\"amr\":[\"SIM_PIN\"],\"azp\":\"x-ZWRhNjU3OWI3MGIwYTRh\"}");
+                "{\"iss\":\"https:\\/\\/reference.mobileconnect.io\\/mobileconnect\",\"sub\":\"411421B0-38D6-6568-A53A-DF99691B7EB6\",\"aud\":[\"x-ZWRhNjU3OWI3MGIwYTRh\"],\"exp\":1474626330,\"iat\":1474626030,\"nonce\":\"81991496-48bb-4d13-bd0c-117d994411a6\",\"at_hash\":\"56F1z7F6wyhTaHUcVFcLIA\",\"auth_time\":1474626020,\"acr\":\"2\",\"amr\":[\"SIM_PIN\"],\"azp\":\"x-ZWRhNjU3OWI3MGIwYTRh\"}");
     }
 
     @Test(dataProvider = "startAuthnData")
     public void testHeadlessAuthenticationGetTokenAccessTokenNull(final AuthenticationOptions authnOptions,
-        final String[] includes, final String exclude)
-        throws RequestFailedException, InvalidResponseException, URISyntaxException
+                                                                  final String[] includes, final String exclude)
+            throws RequestFailedException, InvalidResponseException, URISyntaxException
     {
         final DiscoveryResponse discoveryResponse = this.completeDiscovery();
         this.restClient.addResponse(TestUtils.INVALID_TOKEN_RESPONSE_ACCESS_TOKEN_MISSING);
         this.restClient.addResponse(TestUtils.JWKS_RESPONSE);
 
         final MobileConnectRequestOptions options = authnOptions == null
-                                                    ? null
-                                                    : new MobileConnectRequestOptions.Builder()
-                                                        .withAuthenticationOptions(authnOptions)
-                                                        .build();
+                ? null
+                : new MobileConnectRequestOptions.Builder()
+                .withAuthenticationOptions(authnOptions)
+                .build();
 
         final MobileConnectStatus status =
-            this.mcWebInterface.requestHeadlessAuthentication(this.request, discoveryResponse,
-                "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a6", options);
+                this.mcWebInterface.requestHeadlessAuthentication(this.request, discoveryResponse,
+                        "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a6", options);
 
         assertNotNull(status);
 
@@ -328,29 +328,29 @@ public class MobileConnectWebInterfaceTest
 
         assertNull(status.getRequestTokenResponse().getResponseData().getAccessToken());
         assertEquals(status.getRequestTokenResponse().getResponseData().getIdToken(),
-            "eyJhbGciOiJSUzI1NiIsImtpZCI6IlBIUE9QLTAwIn0.eyJpc3MiOiJodHRwczpcL1wvcmVmZXJlbmNlLm1vYmlsZWNvbm5lY3QuaW9cL21vYmlsZWNvbm5lY3QiLCJzdWIiOiI0MTE0MjFCMC0zOEQ2LTY1NjgtQTUzQS1ERjk5NjkxQjdFQjYiLCJhdWQiOlsieC1aV1JoTmpVM09XSTNNR0l3WVRSaCJdLCJleHAiOjE0NzQ2MjYzMzAsImlhdCI6MTQ3NDYyNjAzMCwibm9uY2UiOiI4MTk5MTQ5Ni00OGJiLTRkMTMtYmQwYy0xMTdkOTk0NDExYTYiLCJhdF9oYXNoIjoiNTZGMXo3RjZ3eWhUYUhVY1ZGY0xJQSIsImF1dGhfdGltZSI6MTQ3NDYyNjAyMCwiYWNyIjoiMiIsImFtciI6WyJTSU1fUElOIl0sImF6cCI6IngtWldSaE5qVTNPV0kzTUdJd1lUUmgifQ.TYcvfIHeKigkvjYta6fy90EffiA6u6NFCSIPlPM2WxEUi8Kxc5JIrjXnM8l0rFJOLmgNFUBpSqIRhuxwZkUV52KWf8jzswi3jTI8wEjonbjgviz7c6WzlZdb0Pw5kUEWy2xMam7VprESphPaIkHCDor2yR2g6Uq3Wtqyg7MCqek");
+                "eyJhbGciOiJSUzI1NiIsImtpZCI6IlBIUE9QLTAwIn0.eyJpc3MiOiJodHRwczpcL1wvcmVmZXJlbmNlLm1vYmlsZWNvbm5lY3QuaW9cL21vYmlsZWNvbm5lY3QiLCJzdWIiOiI0MTE0MjFCMC0zOEQ2LTY1NjgtQTUzQS1ERjk5NjkxQjdFQjYiLCJhdWQiOlsieC1aV1JoTmpVM09XSTNNR0l3WVRSaCJdLCJleHAiOjE0NzQ2MjYzMzAsImlhdCI6MTQ3NDYyNjAzMCwibm9uY2UiOiI4MTk5MTQ5Ni00OGJiLTRkMTMtYmQwYy0xMTdkOTk0NDExYTYiLCJhdF9oYXNoIjoiNTZGMXo3RjZ3eWhUYUhVY1ZGY0xJQSIsImF1dGhfdGltZSI6MTQ3NDYyNjAyMCwiYWNyIjoiMiIsImFtciI6WyJTSU1fUElOIl0sImF6cCI6IngtWldSaE5qVTNPV0kzTUdJd1lUUmgifQ.TYcvfIHeKigkvjYta6fy90EffiA6u6NFCSIPlPM2WxEUi8Kxc5JIrjXnM8l0rFJOLmgNFUBpSqIRhuxwZkUV52KWf8jzswi3jTI8wEjonbjgviz7c6WzlZdb0Pw5kUEWy2xMam7VprESphPaIkHCDor2yR2g6Uq3Wtqyg7MCqek");
 
         assertEquals(status.getRequestTokenResponse().getDecodedIdTokenPayload(),
-            "{\"iss\":\"https:\\/\\/reference.mobileconnect.io\\/mobileconnect\",\"sub\":\"411421B0-38D6-6568-A53A-DF99691B7EB6\",\"aud\":[\"x-ZWRhNjU3OWI3MGIwYTRh\"],\"exp\":1474626330,\"iat\":1474626030,\"nonce\":\"81991496-48bb-4d13-bd0c-117d994411a6\",\"at_hash\":\"56F1z7F6wyhTaHUcVFcLIA\",\"auth_time\":1474626020,\"acr\":\"2\",\"amr\":[\"SIM_PIN\"],\"azp\":\"x-ZWRhNjU3OWI3MGIwYTRh\"}");
+                "{\"iss\":\"https:\\/\\/reference.mobileconnect.io\\/mobileconnect\",\"sub\":\"411421B0-38D6-6568-A53A-DF99691B7EB6\",\"aud\":[\"x-ZWRhNjU3OWI3MGIwYTRh\"],\"exp\":1474626330,\"iat\":1474626030,\"nonce\":\"81991496-48bb-4d13-bd0c-117d994411a6\",\"at_hash\":\"56F1z7F6wyhTaHUcVFcLIA\",\"auth_time\":1474626020,\"acr\":\"2\",\"amr\":[\"SIM_PIN\"],\"azp\":\"x-ZWRhNjU3OWI3MGIwYTRh\"}");
     }
 
     @Test(dataProvider = "startAuthnData")
     public void testHeadlessAuthenticationGetTokenButNonceDoesNotMatch(final AuthenticationOptions authnOptions,
-        final String[] includes, final String exclude)
-        throws RequestFailedException, InvalidResponseException, URISyntaxException
+                                                                       final String[] includes, final String exclude)
+            throws RequestFailedException, InvalidResponseException, URISyntaxException
     {
         final DiscoveryResponse discoveryResponse = this.completeDiscovery();
         this.restClient.addResponse(TestUtils.VALIDATED_TOKEN_RESPONSE);
 
         final MobileConnectRequestOptions options = authnOptions == null
-                                                    ? null
-                                                    : new MobileConnectRequestOptions.Builder()
-                                                        .withAuthenticationOptions(authnOptions)
-                                                        .build();
+                ? null
+                : new MobileConnectRequestOptions.Builder()
+                .withAuthenticationOptions(authnOptions)
+                .build();
 
         final MobileConnectStatus status =
-            this.mcWebInterface.requestHeadlessAuthentication(this.request, discoveryResponse,
-                "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a7", options);
+                this.mcWebInterface.requestHeadlessAuthentication(this.request, discoveryResponse,
+                        "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a7", options);
 
         assertNotNull(status);
 
@@ -358,36 +358,36 @@ public class MobileConnectWebInterfaceTest
         assertEquals(status.getResponseType(), MobileConnectStatus.ResponseType.ERROR);
 
         assertEquals(status.getErrorCode(), "unknown_error");
-       // assertEquals(status.getErrorMessage(), "nonce values do not match, possible replay attack");
+        // assertEquals(status.getErrorMessage(), "nonce values do not match, possible replay attack");
 
     }
 
     @Test(dataProvider = "startAuthnData")
     public void testHeadlessAuthenticationWithoutDiscoveryResponse(final AuthenticationOptions authnOptions,
-        final String[] includes, final String exclude)
-        throws RequestFailedException, InvalidResponseException, URISyntaxException
+                                                                   final String[] includes, final String exclude)
+            throws RequestFailedException, InvalidResponseException, URISyntaxException
     {
         final DiscoveryResponse discoveryResponse = this.completeDiscovery();
         DiscoveryOptions discoveryOptions = new DiscoveryOptions.Builder()
-            .withIdentifiedMcc("111")
-            .withIdentifiedMnc("11")
-            .build();
+                .withIdentifiedMcc("111")
+                .withIdentifiedMnc("11")
+                .build();
         ((DiscoveryService) this.discoveryService).addCachedDiscoveryResponse(discoveryOptions,
-            discoveryResponse);
+                discoveryResponse);
 
         this.restClient.addResponse(TestUtils.VALIDATED_TOKEN_RESPONSE);
         this.restClient.addResponse(TestUtils.JWKS_RESPONSE);
 
         final MobileConnectRequestOptions options = authnOptions == null
-                                                    ? null
-                                                    : new MobileConnectRequestOptions.Builder()
-                                                        .withAuthenticationOptions(authnOptions)
-                                                        .build();
+                ? null
+                : new MobileConnectRequestOptions.Builder()
+                .withAuthenticationOptions(authnOptions)
+                .build();
 
         final MobileConnectStatus status =
-            this.mcWebInterface.requestHeadlessAuthentication(this.request,
-                "111_11",
-                "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a6", options);
+                this.mcWebInterface.requestHeadlessAuthentication(this.request,
+                        "111_11",
+                        "1111222233334444", "state", "81991496-48bb-4d13-bd0c-117d994411a6", options);
 
         assertNotNull(status);
 
@@ -400,23 +400,23 @@ public class MobileConnectWebInterfaceTest
         assertEquals(status.getRequestTokenResponse().getResponseCode(), 202);
 
         assertEquals(status.getRequestTokenResponse().getResponseData().getAccessToken(),
-            "966ad150-16c5-11e6-944f-43079d13e2f3");
+                "966ad150-16c5-11e6-944f-43079d13e2f3");
         assertEquals(status.getRequestTokenResponse().getResponseData().getIdToken(),
-            "eyJhbGciOiJSUzI1NiIsImtpZCI6IlBIUE9QLTAwIn0.eyJpc3MiOiJodHRwczpcL1wvcmVmZXJlbmNlLm1vYmlsZWNvbm5lY3QuaW9cL21vYmlsZWNvbm5lY3QiLCJzdWIiOiI0MTE0MjFCMC0zOEQ2LTY1NjgtQTUzQS1ERjk5NjkxQjdFQjYiLCJhdWQiOlsieC1aV1JoTmpVM09XSTNNR0l3WVRSaCJdLCJleHAiOjE0NzQ2MjYzMzAsImlhdCI6MTQ3NDYyNjAzMCwibm9uY2UiOiI4MTk5MTQ5Ni00OGJiLTRkMTMtYmQwYy0xMTdkOTk0NDExYTYiLCJhdF9oYXNoIjoiNTZGMXo3RjZ3eWhUYUhVY1ZGY0xJQSIsImF1dGhfdGltZSI6MTQ3NDYyNjAyMCwiYWNyIjoiMiIsImFtciI6WyJTSU1fUElOIl0sImF6cCI6IngtWldSaE5qVTNPV0kzTUdJd1lUUmgifQ.TYcvfIHeKigkvjYta6fy90EffiA6u6NFCSIPlPM2WxEUi8Kxc5JIrjXnM8l0rFJOLmgNFUBpSqIRhuxwZkUV52KWf8jzswi3jTI8wEjonbjgviz7c6WzlZdb0Pw5kUEWy2xMam7VprESphPaIkHCDor2yR2g6Uq3Wtqyg7MCqek");
+                "eyJhbGciOiJSUzI1NiIsImtpZCI6IlBIUE9QLTAwIn0.eyJpc3MiOiJodHRwczpcL1wvcmVmZXJlbmNlLm1vYmlsZWNvbm5lY3QuaW9cL21vYmlsZWNvbm5lY3QiLCJzdWIiOiI0MTE0MjFCMC0zOEQ2LTY1NjgtQTUzQS1ERjk5NjkxQjdFQjYiLCJhdWQiOlsieC1aV1JoTmpVM09XSTNNR0l3WVRSaCJdLCJleHAiOjE0NzQ2MjYzMzAsImlhdCI6MTQ3NDYyNjAzMCwibm9uY2UiOiI4MTk5MTQ5Ni00OGJiLTRkMTMtYmQwYy0xMTdkOTk0NDExYTYiLCJhdF9oYXNoIjoiNTZGMXo3RjZ3eWhUYUhVY1ZGY0xJQSIsImF1dGhfdGltZSI6MTQ3NDYyNjAyMCwiYWNyIjoiMiIsImFtciI6WyJTSU1fUElOIl0sImF6cCI6IngtWldSaE5qVTNPV0kzTUdJd1lUUmgifQ.TYcvfIHeKigkvjYta6fy90EffiA6u6NFCSIPlPM2WxEUi8Kxc5JIrjXnM8l0rFJOLmgNFUBpSqIRhuxwZkUV52KWf8jzswi3jTI8wEjonbjgviz7c6WzlZdb0Pw5kUEWy2xMam7VprESphPaIkHCDor2yR2g6Uq3Wtqyg7MCqek");
 
         assertEquals(status.getRequestTokenResponse().getDecodedIdTokenPayload(),
-            "{\"iss\":\"https:\\/\\/reference.mobileconnect.io\\/mobileconnect\",\"sub\":\"411421B0-38D6-6568-A53A-DF99691B7EB6\",\"aud\":[\"x-ZWRhNjU3OWI3MGIwYTRh\"],\"exp\":1474626330,\"iat\":1474626030,\"nonce\":\"81991496-48bb-4d13-bd0c-117d994411a6\",\"at_hash\":\"56F1z7F6wyhTaHUcVFcLIA\",\"auth_time\":1474626020,\"acr\":\"2\",\"amr\":[\"SIM_PIN\"],\"azp\":\"x-ZWRhNjU3OWI3MGIwYTRh\"}");
+                "{\"iss\":\"https:\\/\\/reference.mobileconnect.io\\/mobileconnect\",\"sub\":\"411421B0-38D6-6568-A53A-DF99691B7EB6\",\"aud\":[\"x-ZWRhNjU3OWI3MGIwYTRh\"],\"exp\":1474626330,\"iat\":1474626030,\"nonce\":\"81991496-48bb-4d13-bd0c-117d994411a6\",\"at_hash\":\"56F1z7F6wyhTaHUcVFcLIA\",\"auth_time\":1474626020,\"acr\":\"2\",\"amr\":[\"SIM_PIN\"],\"azp\":\"x-ZWRhNjU3OWI3MGIwYTRh\"}");
     }
 
     @Test
     public void testRefreshTokenShouldReturnCompleteStatus()
-        throws RequestFailedException, InvalidResponseException
+            throws RequestFailedException, InvalidResponseException
     {
         final DiscoveryResponse discoveryResponse = this.completeDiscovery();
         this.restClient.addResponse(TestUtils.VALIDATED_TOKEN_RESPONSE);
 
         final MobileConnectStatus status =
-            this.mcWebInterface.refreshToken(this.request, "RefreshToken", discoveryResponse);
+                this.mcWebInterface.refreshToken(this.request, "RefreshToken", discoveryResponse);
 
         assertNotNull(status);
 
@@ -424,25 +424,25 @@ public class MobileConnectWebInterfaceTest
 
         assertEquals(status.getRequestTokenResponse().getResponseCode(), 202);
         assertEquals(status.getRequestTokenResponse().getResponseData().getAccessToken(),
-            "966ad150-16c5-11e6-944f-43079d13e2f3");
+                "966ad150-16c5-11e6-944f-43079d13e2f3");
     }
 
     @Test
     public void testRefreshTokenWithCachedDiscoveryResponse()
-        throws RequestFailedException, InvalidResponseException
+            throws RequestFailedException, InvalidResponseException
     {
         final DiscoveryResponse discoveryResponse = this.completeDiscovery();
         DiscoveryOptions discoveryOptions = new DiscoveryOptions.Builder()
-            .withIdentifiedMcc("111")
-            .withIdentifiedMnc("11")
-            .build();
+                .withIdentifiedMcc("111")
+                .withIdentifiedMnc("11")
+                .build();
         ((DiscoveryService) this.discoveryService).addCachedDiscoveryResponse(discoveryOptions,
-            discoveryResponse);
+                discoveryResponse);
 
         this.restClient.addResponse(TestUtils.VALIDATED_TOKEN_RESPONSE);
 
         final MobileConnectStatus status =
-            this.mcWebInterface.refreshToken(this.request, "RefreshToken", "111_11");
+                this.mcWebInterface.refreshToken(this.request, "RefreshToken", "111_11");
 
         assertNotNull(status);
 
@@ -450,19 +450,19 @@ public class MobileConnectWebInterfaceTest
 
         assertEquals(status.getRequestTokenResponse().getResponseCode(), 202);
         assertEquals(status.getRequestTokenResponse().getResponseData().getAccessToken(),
-            "966ad150-16c5-11e6-944f-43079d13e2f3");
+                "966ad150-16c5-11e6-944f-43079d13e2f3");
     }
 
     @Test
     public void testRevokeTokenShouldReturnCompleteStatus()
-        throws RequestFailedException, InvalidResponseException
+            throws RequestFailedException, InvalidResponseException
     {
         final DiscoveryResponse discoveryResponse = this.completeDiscovery();
         this.restClient.addResponse(TestUtils.REVOKE_TOKEN_SUCCESS_RESPONSE);
 
         final MobileConnectStatus status =
-            this.mcWebInterface.revokeToken(this.request, "AccessToken",
-                Parameters.ACCESS_TOKEN_HINT, discoveryResponse);
+                this.mcWebInterface.revokeToken(this.request, "AccessToken",
+                        Parameters.ACCESS_TOKEN_HINT, discoveryResponse);
 
         assertNotNull(status);
 
@@ -472,20 +472,20 @@ public class MobileConnectWebInterfaceTest
 
     @Test
     public void testRevokeTokenWithCachedDiscoveryResponse()
-        throws RequestFailedException, InvalidResponseException
+            throws RequestFailedException, InvalidResponseException
     {
         final DiscoveryResponse discoveryResponse = this.completeDiscovery();
         DiscoveryOptions discoveryOptions = new DiscoveryOptions.Builder()
-            .withIdentifiedMcc("111")
-            .withIdentifiedMnc("11")
-            .build();
+                .withIdentifiedMcc("111")
+                .withIdentifiedMnc("11")
+                .build();
         ((DiscoveryService) this.discoveryService).addCachedDiscoveryResponse(discoveryOptions,
-            discoveryResponse);
+                discoveryResponse);
         this.restClient.addResponse(TestUtils.REVOKE_TOKEN_SUCCESS_RESPONSE);
 
         final MobileConnectStatus status =
-            this.mcWebInterface.revokeToken(this.request, "AccessToken",
-                Parameters.ACCESS_TOKEN_HINT, "111_11");
+                this.mcWebInterface.revokeToken(this.request, "AccessToken",
+                        Parameters.ACCESS_TOKEN_HINT, "111_11");
 
         assertNotNull(status);
 
@@ -494,7 +494,7 @@ public class MobileConnectWebInterfaceTest
     }
 
     @Test
-    private void attemptDiscoveryManuallyTest() throws JsonDeserializationException, RequestFailedException {
+    public void attemptDiscoveryManuallyTest() throws JsonDeserializationException, RequestFailedException {
         IRestClient restClientLocal = Mockito.mock(RestClient.class);
 
         MobileConnect mobileConnectLocal = MobileConnect

@@ -32,11 +32,4 @@ public class Scope
     public static final String IDENTITYSIGNUP = "mc_identity_signup";
     public static final String IDENTITYSIGNUPPLUS = "mc_identity_signupplus";
     public static final String IDENTITYNATIONALID = "mc_identity_nationalid";
-
-    private Scope()
-    {
-        /*
-        Private default constructor
-         */
-    }
 }
